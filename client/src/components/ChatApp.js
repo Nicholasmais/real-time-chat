@@ -16,8 +16,20 @@ export default function ChatApp() {
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-      socket.on("chats", (availableChats) => {
+    socket.on("chats", (availableChats) => {
       setChats(availableChats);      
+    });
+  
+    socket.on("messages", (chatMessages) => {
+      setMessages(chatMessages);
+    });
+
+    socket.on("getChatMessages", (chatMessages) => {      
+      setMessages(chatMessages);
+    });
+  
+    socket.on("newMessage", (message) => {
+      setMessages(prev => [...prev, message]);
     });
   
     if (socket.connected) {
@@ -29,6 +41,27 @@ export default function ChatApp() {
       socket.disconnect();
     };
   }, []);
+  
+  const selectChat = (chat) => {
+    setSelectedChat(chat);
+    if (chat.isPrivate) {
+      const password = prompt("Digite a senha do chat:");
+      socket.emit("join-chat", { chatId: chat.id, password }, (response) => {
+        if (response.success) {          
+          socket.emit("getChatMessages", { chatId: chat.id });
+        } else {
+          alert("Senha incorreta!");
+          setSelectedChat(null);
+        }
+      });
+    } else {
+      socket.emit("join-chat", { chatId: chat.id }, (response) => {
+        if (response.success) {
+          socket.emit("getChatMessages", { chatId: chat.id });
+        }
+      });
+    }
+  };
 
   const createChat = () => {
     const chatData = { name: chatName, isPrivate, password: isPrivate ? password : null };
@@ -43,33 +76,14 @@ export default function ChatApp() {
     });
   };
 
-  const selectChat = (chat) => {
-    setSelectedChat(chat);
-    if (chat.isPrivate) {
-      const password = prompt("Digite a senha do chat:");
-      socket.emit("join-chat", { chatId: chat.id, password }, (response) => {
-        if (response.success) {
-          socket.emit("getChatMessages", chat.id);
-        } else {
-          alert("Senha incorreta!");
-          setSelectedChat(null);
-        }
-      });
-    } else {
-      socket.emit("join-chat", { chatId: chat.id }, (response) => {
-        if (response.success) {
-          socket.emit("getChatMessages", chat.id);
-        }
-      });
-    }
-  };
-
   const sendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() && selectedChat) {
       socket.emit("sendMessage", {
         chatId: selectedChat.id,
         content: newMessage
+      }, (res) => {
+        setMessages(res[selectedChat.name]);
       });
       setNewMessage("");
     }
@@ -144,7 +158,7 @@ export default function ChatApp() {
                     message.userId === socket.id ? 'message-sent' : 'message-received'
                   }`}
                 >
-                  {message.content}
+                  {message}
                 </div>
               ))}
             </div>
