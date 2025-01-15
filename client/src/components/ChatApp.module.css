@@ -1,0 +1,96 @@
+.chat-app {
+  font-family: 'Arial', sans-serif;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.chat-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.chat-header h1 {
+  font-size: 2rem;
+  color: #333333;
+}
+
+.status {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.status.connected {
+  color: #28a745;
+}
+
+.status.disconnected {
+  color: #dc3545;
+}
+
+.chat-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.create-chat,
+.available-chats {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.create-chat h2,
+.available-chats h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #555555;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.checkbox-group {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.chat-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chat-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.chat-item:last-child {
+  border-bottom: none;
+}
